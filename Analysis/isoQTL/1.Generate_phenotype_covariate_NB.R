@@ -1,4 +1,5 @@
-# Generate phenotype files for isoform level QTL analysis using negative binomial regression
+# Generate phenotype files for isoform level QTL analysis 
+# using negative binomial regression
 
 # Bolun Li
 # Jun 24 2024
@@ -50,17 +51,17 @@ rownames(gpc3) <- str_split_fixed(gpc[,1], ":", 2)[,2]
 gpc3 <- t(gpc3)
 rownames(gpc3) <- paste0("GPC", 1:3)
 
-# comparing numbers of PFs affecting QTL analysis
+# Function to generate covariate matrix
 generate_covariates <- function(covs_mtx, # covariates info mtx, C covariates * N samples 
                                 genotype_pc, # 3 genotype pcs, GPC *N samples
-                                peer_mtx, # peer factors N samples * K peer factors
+                                pc_mtx, # dimensional reduction of expression (PC or peer factor) N samples * K peer factors
                                 K_used,   # Determine how many peer factors used in QTL analysis, could be a vector that does start with 0
                                 samples){ # sample list involved into QTL analysis
   covs <- covs_mtx[,samples]
   if (K_used == 0) {
     rst <- rbind(covs, genotype_pc[,samples])
   }else{
-    peer_used <- peer_mtx[samples,1:K_used]
+    peer_used <- pc_mtx[samples,1:K_used]
     rst <- Reduce(rbind, list(covs, genotype_pc[,samples], t(peer_used)))
   }
   return(rst) # output the list of matrix as covariate input (C+K) covariates * N samples
@@ -188,7 +189,7 @@ for(celltype in celltypes){
   
   covs_final <- generate_covariates(covs_mtx = covs_mtx,
                                     genotype_pc = gpc3,
-                                    peer_mtx = PFs,
+                                    pc_mtx = PFs,
                                     K_used = K_used,
                                     samples = samples)
   covs_final <- t(covs_final)

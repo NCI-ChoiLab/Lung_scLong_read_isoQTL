@@ -1,3 +1,10 @@
+# Integrate isoQTL with single-cell multi-omics data of lung tissues
+# https://doi.org/10.1038/s41467-024-52356-9
+
+# Overlap isoQTL with cCREs identified by scATAC-seq data
+
+# Bolun
+
 library(Seurat)
 library(Signac)
 library(EnsDb.Hsapiens.v86)

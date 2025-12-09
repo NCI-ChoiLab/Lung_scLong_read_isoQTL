@@ -1,5 +1,5 @@
 # Type I error control
-# summarize pval beta on permuted data
+# summarize isoform-level pval beta on permuted data
 
 # Bolun
 

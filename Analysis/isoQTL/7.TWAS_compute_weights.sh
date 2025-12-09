@@ -1,4 +1,6 @@
 #!/bin/sh
+# Run TWAS at the isoform level by FUSION
+# http://gusevlab.org/projects/fusion/
 # Modify from FUSION.compute_weights.R from FUSION
 # FILL IN THESE PATHS
 module load R

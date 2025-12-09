@@ -1,3 +1,9 @@
+# Summarize DEI results across lung cell types
+# compare DEI with DEG 
+# Permutation for FDR control also included in this code
+
+# Author: Bolun
+
 library(stringr)
 library(stringi)
 library(dplyr)

@@ -1,3 +1,8 @@
+# Summarize the validated isoforms at the peptide level
+# Integrate 4 samples 
+
+# Author: Bolun
+
 library("seqinr")
 library(stringi)
 library(stringr)

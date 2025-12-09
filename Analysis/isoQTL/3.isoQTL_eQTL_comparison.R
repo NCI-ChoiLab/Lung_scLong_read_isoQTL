@@ -1,4 +1,5 @@
 # To compare isoQTL and eQTL at gene level
+# Colocalization between isoQTL and eQTL
 # Bolun
 # Apr 9th 
 
