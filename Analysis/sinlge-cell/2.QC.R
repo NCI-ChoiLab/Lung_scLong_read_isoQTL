@@ -102,6 +102,8 @@ ncol(lr.seur.afterqc)
 lr.seur.afterqc$barcode <- colnames(lr.seur.afterqc)
 annot.meta.afterqc <- left_join(lr.seur.afterqc@meta.data, sr.meta ,by = "barcode")
 length(which(is.na(annot.meta.afterqc$Sample.y)))
+
+# Summarize how many cells also captured in long-read
 meta.sum <- annot.meta.afterqc %>% group_by(Ind_Samp) %>% summarise(Gene.median = median(nFeature_RNA.x), 
                                                                      Gene.min = min(nFeature_RNA.x),
                                                                      Gene.max = max(nFeature_RNA.x),

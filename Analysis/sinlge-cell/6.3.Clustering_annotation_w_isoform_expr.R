@@ -35,7 +35,7 @@ for (i in 1:22) {
   lr.data.list[[i]] <- seur
   message("Finish ", i)
 }
-
+# Get all highly variable isoforms
 var.features.3.9k <- SelectIntegrationFeatures(object.list = lr.data.list, nfeatures = 3900)
 var.features.4k <- SelectIntegrationFeatures(object.list = lr.data.list, nfeatures = 4000)
 lr.seur <- merge(lr.data.list[[1]], y = lr.data.list[2:22], project = "Long-read")
@@ -43,10 +43,13 @@ FindVariableFeatures(lr.seur, nfeatures = 2000)
 VariableFeatures(lr.seur) <- var.features
 saveRDS(lr.seur, file = "/data/Choi_lung/scLongreads/Seurat/final/lr_final_w_isoform_expr_norm_sbatch.RDS")
 
-
+# Load data
 lr.seur <- readRDS("/data/Choi_lung/scLongreads/Seurat/final/lr_final_w_isoform_expr_norm_sbatch.RDS")
 DefaultAssay(lr.seur)
 lr.seur <- RunPCA(lr.seur, npcs = 30, verbose = F)
+
+# Normalize isoform expression by SCTransform
+# Reduce dimensions using Harmony
 lr.seur <- IntegrateLayers(
   object = lr.seur, method = HarmonyIntegration,
   orig.reduction = "pca", new.reduction = "harmony",
@@ -69,6 +72,8 @@ colnames(lr.seur)[1:5]
 which(colnames(lr.seur.gene) != colnames(lr.seur))
 lr.seur.gene$Celltype <- lr.seur$Celltype
 length(VariableFeatures(lr.seur))
+
+# Calculate the ct ASW for gene-level clustering using 3000 highly variable genes
 sil.approx.gene <- approxSilhouette(lr.seur.gene@reductions$harmony@cell.embeddings, clusters=lr.seur.gene$Celltype)
 sil.approx <- approxSilhouette(lr.seur@reductions$harmony@cell.embeddings, clusters=lr.seur$Celltype)
 sil.approx.gene$ASW_ct <- (sil.approx.gene$width+1)/2
@@ -82,6 +87,9 @@ VariableFeatures(lr.seur) -> var.features
 var.genes <- TALON_afterqc_orf_secondpass2[var.features,]
 var.genes <- unique(var.genes$annot_gene_name)
 DefaultAssay(lr.seur.gene)
+
+# Re-define the variable features for clustering 
+# using the matching genes of 3000 highly variable isoforms
 VariableFeatures(lr.seur.gene) <- var.genes
 DefaultAssay(lr.seur.gene)
 lr.seur.gene <- RunPCA(lr.seur.gene, npcs = 30, verbose = F)
@@ -96,4 +104,4 @@ length(VariableFeatures(lr.seur.gene))
 sil.approx.gene <- approxSilhouette(lr.seur.gene@reductions$harmony@cell.embeddings, clusters=lr.seur.gene$Celltype)
 
 saveRDS(sil.approx.gene, file = "/data/Choi_lung/scLongreads/Seurat/Gene_level_2532HVG_ASW.rds")
-saveRDS(sil.approx, file = "/data/Choi_lung/scLongreads/Seurat/Isoform_level_3kHVG_ASW.rds")
+

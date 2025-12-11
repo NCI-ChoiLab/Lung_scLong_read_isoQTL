@@ -154,6 +154,7 @@ pheatmap(S, cluster_cols = FALSE)
 pheatmap(S, cluster_cols = FALSE, cluster_rows = FALSE)
 
 # percentage of sharing within the union of mashr significant pairs of two cell types
+# In the end, this version is used for publication
 S2 = matrix(NA, nrow = length(ct), ncol = length(ct))
 for (i in 1:length(ct)) {
   celltype <- ct[i]

@@ -17,6 +17,8 @@ pro_tested <- unique(str_split_fixed(names(fastafile), "\\.", 2)[,1])
 sum(grepl("TALONT", pro_tested))
 sum(grepl("TALONT", subsetlist))
 18697/length(subsetlist)
+
+# Read the summary tables of mass-spec
 NCI134 <- read.table("Need_clean/NCI134.txt", header = TRUE, sep = "\t", comment.char = "")
 NCI134 <- subset(NCI134, Protein.FDR.Confidence..Combined == "High" )
 NCI135 <- read.table("Need_clean/NCI135.txt", header = TRUE, sep = "\t", comment.char = "")
@@ -27,12 +29,14 @@ NCI139 <- read.table("Need_clean/NCI139.txt", header = TRUE, sep = "\t", comment
 NCI139 <- subset(NCI139, Protein.FDR.Confidence..Combined == "High" )
 all_val_pro <- unique(Reduce(union, list(NCI134$Accession, NCI135$Accession, NCI138$Accession, NCI139$Accession)))
 
+# Summarize protein detection
 pro_detection <- data.frame(Accession = all_val_pro,
                             NCI134 = (all_val_pro %in% NCI134$Accession),
                             NCI135 = (all_val_pro %in% NCI135$Accession),
                             NCI138 = (all_val_pro %in% NCI138$Accession),
                             NCI139 = (all_val_pro %in% NCI139$Accession))
 idx <- which(rowSums(pro_detection[,c(2:5)]) >= 2)
+# how many individuals detect the peptide
 pro_detection$MoreThanOne <- rowSums(pro_detection[,c(2:5)]) >= 2
 pro_detection$MoreThanTwo <- rowSums(pro_detection[,c(2:5)]) >= 3
 pro_detection$All <- rowSums(pro_detection[,c(2:5)]) == 4
@@ -56,6 +60,8 @@ pro_detection$Novelty <- "known"
 pro_detection$Novelty[grepl("TALONT", pro_detection$Accession)] <- "Novel"
 table(pro_detection$Novelty)
 pro_detection_only_one_unique_peptide <- subset(pro_detection, Max_Num_unique_peptides < 2)
+
+# This is the criteria that we define the protein validated isoform
 pro_detection_hc <- subset(pro_detection, Max_Num_unique_peptides >= 2 | MoreThanOne == TRUE)
 eIsoform_pro_val <- unique(eIsoforms[which(eIsoforms %in% pro_detection_hc$transcript_id)])
 sum(grepl("TALONT", eIsoforms))
@@ -74,7 +80,7 @@ sum(!grepl("TALONT", pro_detection_hc$Accession[pro_detection_hc$MoreThanOne]))/
 sum(!grepl("TALONT", pro_detection_hc$Accession[pro_detection_hc$All]))/(length(subsetlist) - 18697)  # 16.6%
 
 
-
+# Generate figures
 df_overall <- data.frame(pct = c(8.7, 8.0, 5.6, 22.8, 21.5, 16.6), 
                          Novelty = rep(c("Novel", "Known"), each = 3),
                          detection = rep(c("Any", "More than one", "All"), 2))

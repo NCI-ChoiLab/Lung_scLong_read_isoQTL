@@ -28,17 +28,12 @@ FT_eQTL <- Reduce(rbind, full_sig_list)
 length(unique(FT_eQTL$phenotype_id))
 length(unique(intersect(FT_isoQTL$gene_id, FT_eQTL$phenotype_id)))
 shared_eisoGene <- unique(intersect(FT_isoQTL$gene_id, FT_eQTL$phenotype_id))
-# write.table(unique(FT_eQTL$Celltype), "eQTL_celltype.txt", row.names = FALSE, quote = FALSE,
-#             col.names = FALSE)
-# write.table(unique(FT_isoQTL$Celltype), "isoQTL_celltype.txt", row.names = FALSE, quote = FALSE,
-#             col.names = FALSE)
 
 495/2229 # 22.2% shared at gene level
 
+# Coorperate the naming difference between long-read and short-read
 CT_match <- read.table("/data/Choi_lung/scLongreads/eQTL_comparison/eQTL_celltype.txt", sep = "\t")
 CT_match1 <- read.table("/data/Choi_lung/scLongreads/eQTL_comparison/isoQTL_celltype.txt", sep = "\t")
-# FT_eQTL_ct_matched <- subset(FT_eQTL, Celltype %in% CT_match$V1)
-# length(unique(FT_eQTL_ct_matched$phenotype_id))
 
 FT_eQTL$Celltype_matching <- FT_eQTL$Celltype
 for(i in 1:nrow(CT_match)){
@@ -51,6 +46,8 @@ for(i in 1:nrow(CT_match1)){
 FT_isoQTL_shared <- subset(FT_isoQTL, gene_id %in% shared_eisoGene)
 FT_eQTL_shared <- subset(FT_eQTL, phenotype_id %in% shared_eisoGene)
 
+# match isoQTL and eQTL at gene level
+# Require them in the same cell types
 FT_isoQTL_shared$gene_ct <- paste(FT_isoQTL_shared$gene_id, FT_isoQTL_shared$Celltype_matching, sep = "-")
 FT_eQTL_shared$gene_ct <- paste(FT_eQTL_shared$phenotype_id, FT_eQTL_shared$Celltype_matching, sep = "-")
 length(unique(FT_isoQTL_shared$gene_ct))
@@ -66,6 +63,8 @@ shared_diff_ct <- setdiff(unique(str_split_fixed(isoQTL_unique, "-", 2)[,1]),
 
 FT_isoQTL_shared_diff_ct <- subset(FT_isoQTL_shared, gene_id %in% shared_diff_ct)
 FT_eQTL_shared_diff_ct <- subset(FT_eQTL_shared, phenotype_id %in% shared_diff_ct)
+
+# Add info if they are DEI in the cell types
 load("/vf/users/Choi_lung/scLongreads/DEI/DEI_ct_specific_eIsofrom_GTEx_compare.RData")
 ct_spec_isoforms
 tmp <- subset(FT_isoQTL_shared_diff_ct, phenotype_id %in% ct_spec_isoforms)
@@ -103,6 +102,7 @@ idx <- grep("swarm", file_paths)
 file_paths <- file_paths[-idx]
 file_paths <- file_paths[-c(9,12,25:29,37,39, 40,42,43,46)]
 
+# prepare for colocalization between eQTL and isoQTL
 NB.coloc.list <- list()
 for (ct in file_paths) {
   files <- list.files(paste0("/data/Choi_lung/scLongreads/jaxqtl/",ct), 
@@ -146,7 +146,9 @@ unique(FT_isoQTL_shared_same_ct_joined$gene_ct)
 df <- str_split_fixed(unique(FT_isoQTL_shared_same_ct_joined$gene_ct), "-",2)
 length(unique(df[,2]))
 
-
+###################################
+########## Colocalization #########
+###################################
 
 library(coloc)
 library(snowfall)
@@ -246,6 +248,9 @@ write.table(FT_isoQTL_shared_same_ct_joined, file = "/data/Choi_lung/scLongreads
 
 FT_isoQTL_shared_same_ct_joined <- read.table("/data/Choi_lung/scLongreads/eQTL_comparison/isoeQTL_shared_same_ct_coloc_rst.txt",
                                               sep = "\t", header = TRUE)
+
+# Prepare tables for plotting
+# PPIL6 in multiciliated cells
 gene = "ENSG00000185250"
 celltype = "Multiciliated"
 isoQTLs <- NB.coloc.list[[celltype]]
@@ -283,7 +288,7 @@ write.table(filt_eQTLs, file = "/data/Choi_lung/scLongreads/eQTL_comparison/PPIL
 write.table(filt_isoQTLs, file = "/data/Choi_lung/scLongreads/eQTL_comparison/PPIL6_isoQTL.txt", 
             quote = FALSE, row.names = FALSE, sep = "\t")
 
-
+# Plot for PPIL6 colocalization
 # install.packages("devtools")
 devtools::install_github("boxiangliu/locuscomparer")
 

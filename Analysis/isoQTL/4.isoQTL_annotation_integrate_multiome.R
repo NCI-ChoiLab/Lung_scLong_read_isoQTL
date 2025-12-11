@@ -77,3 +77,5 @@ for (celltype in names(NB.sig.list)) {
   
 }
 leadisoQTL_int_multiome <- Reduce(rbind, leadisoQTL_int_multiome.list)
+
+# Use plink is faster

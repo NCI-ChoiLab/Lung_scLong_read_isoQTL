@@ -42,6 +42,7 @@ for (i in 1:length(name)) {
   # save original barcodes from PacBio
   seur$orig.barcode <- colnames(seur)
   # reverse complementary DNA of barcodes
+  # PacBio only
   CB.reverse <- chartr(old="ATGC", new="TACG", colnames(seur))
   CB.reverse <- stri_reverse(CB.reverse)
   CB.lr <- paste(str_split_fixed(CB.reverse, "-", n =2)[,2], "-1", sep = "")

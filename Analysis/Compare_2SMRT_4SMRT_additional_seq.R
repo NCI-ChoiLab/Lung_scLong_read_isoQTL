@@ -17,59 +17,11 @@ sample_dir <- list.dirs(file_dir, recursive = FALSE)
 name <- list.dirs(file_dir, recursive = FALSE, full.names = FALSE)
 name <- str_split_fixed(name, pattern = "_", n = 2)[,2]
 
-
+# Load talon results after adding these two 4 SMRT cell data
 talon3 <- read.table("/data/Choi_lung/scLongreads/TALON_workspace/indepth/output3_talon_read_annot.tsv", header = TRUE)
 
-
-talon1.list <- split(talon1, talon1$dataset)
-talon2.list <- split(talon2, talon1$dataset)
-talon.list <- c(talon1.list,talon2.list)
-talon <- rbind(talon1,talon2)
-rm(talon1)
-rm(talon1.list)
-rm(talon2)
-rm(talon2.list)
-talon_transcript_id <- unique(talon$annot_transcript_id)
-talon_transcript_id_stat <- sapply(talon_transcript_id, function(x){
-  df <- subset(talon, annot_transcript_id == x)
-  count <- length(unique(df$dataset))
-  return(count)
-})
-talon_transcript_id_stat <- talon %>%
-  group_by(annot_transcript_id) %>%
-  summarise(unique_dataset = n_distinct(dataset))
-table(talon_transcript_id_stat$unique_dataset)
-talon_transcript_id_stat_consistent <- subset(talon_transcript_id_stat, unique_dataset == 22)
-talon <- readRDS("/data/Choi_lung/scLongreads/TALON_workspace/test10s/talon_read_annot.RDS")
-talon <- talon %>%
-  group_by(annot_transcript_id) %>%
-  mutate(unique_dataset = n_distinct(dataset))
-talon_IRF4<- subset(talon, annot_gene_name == "IRF4")
-
-talon$common_detected <- "specific"
-talon$common_detected[which(talon$unique_dataset > 19)] <- "common"
-mean(talon$read_length)
-
-library(plyr)
-cdat <- ddply(talon, "common_detected", summarise, rating.mean=mean(read_length))
-cdat
-# Overlaid histograms
-ggplot(talon, aes(x=read_length, fill=common_detected)) +
-  geom_histogram(binwidth=.5, alpha=.5, position="identity") +
-  geom_vline(data=cdat, aes(xintercept=rating.mean,  colour=common_detected),
-             linetype="dashed", size=1)
-
-
-table(talon$transcript_novelty)
-table(talon$)
-tmp <- talon %>%
-  group_by(annot_transcript_id) %>%
-  summarise(unique_transcripts = count(read_name))
-
-tmp <-talon %>% distinct(annot_transcript_id, transcript_novelty)
-
-
 ####################
+# Generate seurat object for two batch w/ 4 SMRT cells
 i = 2
 name[i]
 bc_name_tag <- name
@@ -132,6 +84,7 @@ for (i in 1:length(name)) {
 saveRDS(dataset_list, file = "/data/Choi_lung/scLongreads/Seurat/lr.list.isoform.expr.indepth.RDS")
 saveRDS(Iso.sum.list, file = "/data/Choi_lung/scLongreads/Seurat/lr.list.isoform.expr.sum.indepth.RDS")
 Secondpass.pfam.isoforrm <- read.table("/data/Choi_lung/scLongreads/TALON_workspace/test10s/NCI_lung_secondpass.isoforms_w_known")
+# This is the results using 2 SMRT cells
 dataset_list1 <- readRDS("/data/Choi_lung/scLongreads/Seurat/lr.list.isoform.expr.RDS")
 iso.info1 <- list()
 for (i in 1:22) {
@@ -154,13 +107,9 @@ for (i in 1:2) {
 }
 cols <- colnames(iso.info[[1]])
 
+# Load isoform info summary
 TALON_afterqc_orf_secondpass <- readRDS("/data/Choi_lung/scLongreads/Seurat/TALON_afterqc_orf_secondpass_w_known_v3.rds")
-length(unique(intersect(iso.info[[1]]$annot_transcript_id, TALON_afterqc_orf_secondpass$annot_transcript_id))) 
-length(unique(intersect(iso.info1[[1]]$annot_transcript_id, TALON_afterqc_orf_secondpass$annot_transcript_id))) 
-length(unique(intersect(iso.info[[2]]$annot_transcript_id, TALON_afterqc_orf_secondpass$annot_transcript_id))) 
-length(unique(intersect(iso.info1[[2]]$annot_transcript_id, TALON_afterqc_orf_secondpass$annot_transcript_id)))
 load("/data/Choi_lung/scLongreads/Seurat/InDepth_2sample_comparison.RData")
-
 
 # Improvement of isoform detection at single-cell batch level
 df2 = data.frame(Number = c(73880, 83512,  78183, 89569),
@@ -187,7 +136,7 @@ ggsave("/data/lib14/project/scLongread/Fig_realS3B-2.pdf", width = 7,height = 7)
 
 
 
-
+# Summarize saturation with different number of SMRT cells
 Saturation_NCI4 <- read.table("/data/Choi_lung/scLongreads/B2_percentile/indepth_2_samples/Sample_04_NCI_30_35/4_NCI_30_35_classification.saturation.txt", sep = "\t",header=TRUE)
 Saturation_NCI4$batch <-"NCI4"
 Saturation_NCI19 <- read.table("/data/Choi_lung/scLongreads/B2_percentile/indepth_2_samples/Sample_19_NCI_124_129/19_NCI_124_129_classification.saturation.txt", sep = "\t",header=TRUE)
@@ -238,14 +187,18 @@ tmp <- rbind(iso.info[[1]][,cols], iso.info[[2]][,cols])
 tmp <- distinct(tmp, transcript_name_unique, .keep_all = TRUE)
 length(unique(tmp$transcript_name_unique))
 
-TALON_afterqc_orf_secondpass <- readRDS("/data/Choi_lung/scLongreads/Seurat/TALON_afterqc_orf_secondpass_w_known_v3.rds")
-TALON_afterqc_orf_secondpass2 <- readRDS("/data/Choi_lung/scLongreads/Seurat/TALON_afterqc_orf_secondpass_w_known_v3.rds")
+# Now compare with 2 SMRT cell at single cell level
+
+# To check if the DEI specificity coming from sparsity
+# Subset from combined data with cell type annotation
 table(TALON_afterqc_orf_secondpass$transcript_catalog)
 lr <- readRDS("/data/Choi_lung/scLongreads/Seurat/final/lr_final_v2_wRNAexpr.RDS")
 NCI4 <- subset(lr, orig.ident == "4_NCI_30_35")
 colnames(NCI4) <- NCI4$orig.barcode
 NCI4_4SMRT <- dataset_list[[1]]
 NCI4_cells <- intersect((NCI4_4SMRT$orig.barcode), NCI4$orig.barcode)
+
+# Keep the cells post QC
 NCI4 <- subset(NCI4, cells = NCI4_cells)
 colnames(NCI4_4SMRT) <- NCI4_4SMRT$orig.barcode
 NCI4_4SMRT_qc <- subset(NCI4_4SMRT, cells = NCI4_cells)
@@ -264,6 +217,8 @@ NCI19 <- subset(lr, orig.ident == "19_NCI_124_129")
 colnames(NCI19) <- NCI19$orig.barcode
 NCI19_4SMRT <- dataset_list[[2]]
 NCI19_cells <- intersect((NCI19_4SMRT$orig.barcode), NCI19$orig.barcode)
+
+# Keep the cells post QC
 NCI19 <- subset(NCI19, cells = NCI19_cells)
 colnames(NCI19_4SMRT) <- NCI19_4SMRT$orig.barcode
 NCI19_4SMRT_qc <- subset(NCI19_4SMRT, cells = NCI19_cells)

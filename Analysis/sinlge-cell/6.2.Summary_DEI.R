@@ -43,6 +43,8 @@ names(DEI_unique.list) <- celltypes
 save(list = ls(), file = "/data/Choi_lung/scLongreads/DEI/DEI_workspace.RData")
 df_DEI <- data.frame(Celltype = celltypes,
                      Number = sapply(DEI_sig.list, nrow))
+                    
+# Theme for plotting
 ct_levels <- c(
   'Secretory transitional cells', 'Club', 'AT2', 'Multiciliated', 'AT1', 'Alveolar transitional cells', 'Goblet', 'Basal', 'Neuroendocrine',  # Epithelial
   'Lymphatic EC', 'EC aerocyte capillary', 'EC arterial', 'EC venous systemic', 'EC venous pulmonary', 'EC general capillary',  # Endothelial
@@ -161,7 +163,8 @@ ggsave("figures/Fig.S5a.pdf", width = 16, height = 10)
 ######################
 #### permutation #####
 ######################
-
+# To permute the data and break the association
+# The phenotype is shuffled
 
 files <- list.files("/data/Choi_lung/scLongreads/DEI/WholegroupPhaseI/output_permutation/UnfilteredResults/SMC/", pattern = ".csv")
 
