@@ -122,7 +122,7 @@ SPSB2_base_plot + theme_bw() +
              colour = "darkgreen")+
   theme(legend.position = "top", legend.spacing.x  =  unit(0.01, 'cm'), legend.key.size = unit(0.25, 'cm')) 
 
-ggsave("/data/lib14/project/scLongread/FigS11A.pdf", width = 10,height = 10)
+ggsave("/data/lib14/project/scLongread/FigS16A.pdf", width = 10,height = 10)
 
 # # only for HLA-DQA1 with longer intron
 

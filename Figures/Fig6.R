@@ -16,9 +16,9 @@ p2 <- locuscompare(in_fn1 = gwas_fn, in_fn2 = eQTL_fn, title = 'GWAS', title2 = 
              population = "EAS", snp = "rs12528822")
 p3 <- locuscompare(in_fn1 = isoQTL_fn, in_fn2 = gwas_fn, title = 'isoQTL', title2 = 'GWAS',
                    population = "EAS", snp = "rs12528822")
-ggsave("./figures/Fig7B1.pdf", p1, width = 12, height = 8)
-ggsave("./figures/Fig7B2.pdf", p2, width = 12, height = 8)
-ggsave("./figures/Fig7B3.pdf", p3, width = 12, height = 8)
+ggsave("./figures/Fig6E1.pdf", p1, width = 12, height = 8)
+ggsave("./figures/Fig6E2.pdf", p2, width = 12, height = 8)
+ggsave("./figures/Fig6E3.pdf", p3, width = 12, height = 8)
 
 # Summarize CCVs of isoQTls and eQTLs
 mytoken = "149dc339070c"

@@ -346,8 +346,8 @@ ggplot(df_long_sub, aes(fill = Celltype_matching, y = value, x = Celltype_matchi
   )+ylab("Normalized expression")
 
 ggsave("/data/lib14/project/scLongread/Fig3D.pdf", width = 15,height = 7) # CAV1
-ggsave("/data/lib14/project/scLongread/Fig4F.pdf", width = 12,height = 7) # SCGB1A1
-ggsave("/data/lib14/project/scLongread/FigS8A1.pdf", p,width = 10,height = 7) # SPSB2
+ggsave("/data/lib14/project/scLongread/Fig4G.pdf", width = 12,height = 7) # SCGB1A1
+ggsave("/data/lib14/project/scLongread/FigS15D.pdf", p,width = 10,height = 7) # OAS1
 Isoform_info <- TALON_afterqc_orf_secondpass[,c("annot_gene_id", "transcript_name_unique")]
 save(list = c("norm_mtx_sum", "count_mtx_per_final", "Isoform_info", "celltypes", "cellcolors"), file = "/data/Choi_lung/scLongreads/DEI/plots/ISOLUTION.RData")
 norm_mtx_sum <- norm_mtx_sum[,]
@@ -530,7 +530,7 @@ df <- df[-which.max(df$NB),]
 df$Which_sig <- factor(df$Which_sig, levels = rev(c("n.s.", "Tensor Sig only",
                                                     "NB Sig only", "Sig in both")))
 
-# Figure S6A
+# Figure S10
 ggplot(df, aes(x = Tensor, y= NB,colour = Which_sig)) +
   geom_point(alpha = 0.3) + ylab("-log(pval_nominal) in NB")  + 
   geom_point(data = subset(df, Which_sig != "n.s."), aes(x = Tensor, y= NB,colour = Which_sig), alpha = 0.7)+
@@ -546,7 +546,7 @@ ggplot(df, aes(x = Tensor, y= NB,colour = Which_sig)) +
         axis.line = element_line(linewidth = .5, colour = "black", linetype=1),
         legend.title = element_text(size=10), 
         legend.text = element_text(size=10))
-ggsave("/data/lib14/project/scLongread/FigS4A.pdf", width = 10,height = 7)
+ggsave("/data/lib14/project/scLongread/FigS10A.pdf", width = 10,height = 7)
 df$Tensor <- AT2_tensor_lead$slope[-which.min(AT2_NB_lead$pval_nominal)]
 df$NB <- AT2_NB_lead$slope[-which.min(AT2_NB_lead$pval_nominal)]
 
@@ -567,7 +567,7 @@ ggplot(df, aes(x = Tensor, y= NB,colour = Which_sig)) +
         axis.line = element_line(linewidth = .5, colour = "black", linetype=1),
         legend.title = element_text(size=10), 
         legend.text = element_text(size=10))
-ggsave("/data/lib14/project/scLongread/FigS4B.pdf", width = 7,height = 7)
+ggsave("/data/lib14/project/scLongread/FigS10B.pdf", width = 7,height = 7)
 AT2_cis_NB <- NB.list$AT2
 AT2_cis_Tensor <- Tensor.list$AT2
 Tensor_sig_iso <- AT2_cis_Tensor$phenotype_id[which(AT2_cis_Tensor$qval < 0.05)]
@@ -629,10 +629,10 @@ ggplot() +
         axis.line = element_line(linewidth = .5, colour = "black", linetype=1),
         legend.title = element_text(size=10), 
         legend.text = element_text(size=10), legend.position = "none")
-ggsave("/data/lib14/project/scLongread/FigS4C_V3.pdf", width = 10,height = 7)
-ggsave("/data/lib14/project/scLongread/FigS4C_legend.pdf", width = 10,height = 7)
+ggsave("/data/lib14/project/scLongread/FigS10C_V3.pdf", width = 10,height = 7)
+ggsave("/data/lib14/project/scLongread/FigS10C_legend.pdf", width = 10,height = 7)
 
-# Figure S4C
+# Figure S10C
 ggplot(df_expr) +
   geom_histogram(aes(x=exprs,y=..density..,fill=Model),position="identity",alpha=.5,binwidth = 0.02) + 
   geom_density(aes(x=exprs,y=..density.., color=Model), linewidth = 1)+
@@ -645,7 +645,7 @@ ggplot(df_expr) +
         axis.title = element_text(size = 16, face = "bold", colour = "black"),
         strip.text = element_text(size = 16, colour = "black"))
 
-ggsave("/data/lib14/project/scLongread/FigS4C_v2.pdf", width = 10,height = 7)
+ggsave("/data/lib14/project/scLongread/FigS10C_v2.pdf", width = 10,height = 7)
 
 # Figure 3B
 table(lr.isoform.sub$Celltype)
@@ -679,27 +679,6 @@ ggplot(data = df_stat,aes(x=Celltype, y=`Cell proportion`, fill=Celltype)) +
         legend.text = element_text(size=10),
         legend.position = "none")
 ggsave("/data/lib14/project/scLongread/Fig3B.pdf", width = 12,height = 7)
-
-# Figure S5C
-df_stat_sub <- subset(df_stat, `Cell number` >= 5)
-table(df_stat_sub$Celltype)
-df <- as.data.frame(table(df_stat_sub$Celltype))
-ggplot(df, aes(x=Var1, y=Freq,fill=Var1)) +
-  geom_bar(stat="identity")+
-  labs(y="Number of individuals (> 5 cells)",x= "Cell type") + 
-  geom_hline(yintercept = 40) + scale_fill_manual("Legend", values = cellcolors)+
-  theme(axis.text.x = element_text(color = "black", size = 12, angle = 90, vjust = 0.5, hjust=1),
-        axis.text.y = element_text(color = "black", size = 12, angle = 90, vjust = 0.5, hjust=1),  
-        axis.title.x = element_text(color = "black", size = 16),
-        axis.title.y = element_text(color = "black", size = 16),
-        panel.background = element_rect(fill='transparent'),
-        plot.background = element_rect(fill='transparent'),
-        axis.line = element_line(linewidth = .5, colour = "black", linetype=1),
-        legend.title = element_text(size=10), 
-        legend.text = element_text(size=10),
-        legend.position = "none")
-ggsave("/data/lib14/project/scLongread/FigS5C.pdf", width = 12,height = 7)
-
 
 
 # Figure 5G
@@ -761,7 +740,7 @@ CoveragePlot(
 )
 
 
-# Figure S7
+# Figure S11
 NB.sig.list <- readRDS("/data/Choi_lung/scLongreads/jaxqtl/isoQTL_NB_sig_list.rds")
 NB.list <- readRDS("/data/Choi_lung/scLongreads/jaxqtl/isoQTL_NB_list.rds")
 df_sum <- data.frame(celltype = names(NB.list), # covar for sec_trans was not generated correctly
@@ -801,7 +780,7 @@ ggplot(df_sum, aes(x=Celltype_matching, y=Total_isoform, fill = Categroy)) +
         legend.text = element_text(size=10),
         legend.position="none",
         legend.justification="right")
-ggsave("/data/lib14/project/scLongread/FigS7A.pdf", width = 12,height = 7)
+ggsave("/data/lib14/project/scLongread/FigS11A.pdf", width = 12,height = 7)
 library(ggrepel)
 library(ggpubr)
 df<- df_sum %>%
@@ -831,7 +810,7 @@ ggplot(df_sum,aes(x=Total_isoform,y=eIsoform))+
         legend.text = element_text(size=10),
         legend.position="none",
         legend.justification="right")
-ggsave("/data/lib14/project/scLongread/FigS7B.pdf", width = 7,height = 7)
+ggsave("/data/lib14/project/scLongread/FigS11B.pdf", width = 7,height = 7)
 ggplot(df_sum,aes(x=Cell_num,y=eIsoform))+geom_point() +
   stat_smooth(method=lm,formula=y~x) + 
   geom_text_repel(aes(color = Celltype_matching),label=df_sum$Celltype_matching)+
@@ -851,7 +830,7 @@ ggplot(df_sum,aes(x=Cell_num,y=eIsoform))+geom_point() +
         legend.text = element_text(size=10),
         legend.position="none",
         legend.justification="right")
-ggsave("/data/lib14/project/scLongread/FigS7C.pdf", width = 7,height = 7)
+ggsave("/data/lib14/project/scLongread/FigS11C.pdf", width = 7,height = 7)
 
 
 files_path <- paste0("/data/Choi_lung/scLongreads/tensorqtl/isoform_level/", names(NB.sig.list),
@@ -881,7 +860,7 @@ ggplot(df_sum,aes(x=Indv_num,y=eIsoform))+geom_point() +
         legend.text = element_text(size=10),
         legend.position="none",
         legend.justification="right")
-ggsave("/data/lib14/project/scLongread/FigS7D.pdf", width = 7,height = 7)
+ggsave("/data/lib14/project/scLongread/FigS11D.pdf", width = 7,height = 7)
 
 
 eIsoform <- str_split_fixed(rownames(true_sig), "\\|", 2)[,1]

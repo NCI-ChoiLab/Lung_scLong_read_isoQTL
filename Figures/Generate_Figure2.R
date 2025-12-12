@@ -75,7 +75,7 @@ df_long$variable <- factor(df_long$variable, levels = c("Known", "ISM", "NIC",
 ggboxplot(df_long, x = "variable", y = "value", color = "variable")+
   scale_color_manual(values = cat.palette) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-ggsave("/data/lib14/project/scLongread/Fig2C.pdf", device = cairo_pdf, width = 6,height = 8)
+ggsave("/data/lib14/project/scLongread/Fig2B.pdf", device = cairo_pdf, width = 6,height = 8)
 
 df_isoform$Var1 <- factor(df_isoform$Var1, levels = c("Known", "ISM", "NIC", 
                                                       "NNC","fusion", "Genomic", "Antisense"))
@@ -93,7 +93,7 @@ ggplot(df_isoform, aes(x = Var1, y = Freq, fill = Var1)) +
         axis.line = element_line(linewidth = .5, colour = "black", linetype=1),
         legend.title = element_text(size=10), 
         legend.text = element_text(size=10))
-ggsave("/data/lib14/project/scLongread/Fig2B.pdf", width = 8,height = 8)
+ggsave("/data/lib14/project/scLongread/Fig2C.pdf", width = 8,height = 8)
 
 count_mtx <- lr.isoform.sub@assays$Isoform@counts
 count_mtx <- count_mtx[TALON_afterqc_orf_secondpass2$transcript_name_unique,]
@@ -119,7 +119,7 @@ ggplot(df_density, aes(x=indv_n, fill=Novelty)) +
   theme(axis.text = element_text(size = 16, colour = "black"),
         axis.title = element_text(size = 16, face = "bold", colour = "black"),
         strip.text = element_text(size = 16, colour = "black"))
-ggsave("/data/lib14/project/scLongread/Fig2E.pdf",height = 7,width = 15)
+ggsave("/data/lib14/project/scLongread/Fig2F.pdf",height = 7,width = 15)
 
 # number of novel and known isoforms per gene
 tmp <- as.matrix.data.frame(table(TALON_afterqc_orf_secondpass2$annot_gene_id, TALON_afterqc_orf_secondpass2$transcript_catalog))
@@ -161,7 +161,7 @@ hm<-pheatmap(t(mtx_niso_per_gene), cluster_rows = FALSE, cluster_cols = FALSE,
          color = (brewer.pal(7,"YlGnBu")), scale = "none",border_color = "white",
          cellwidth = 25,cellheight = 25)
 
-pdf("/data/lib14/project/scLongread/Fig2D.pdf")
+pdf("/data/lib14/project/scLongread/Fig2E.pdf")
 print(hm)
 dev.off()
 
@@ -205,4 +205,4 @@ ggplot(df_AS_long, aes(x=AS, y=value, fill = AS, alpha = variable)) +
         axis.line = element_line(linewidth = .5, colour = "black", linetype=1),
         legend.title = element_text(size=10), 
         legend.text = element_text(size=10))
-ggsave("/data/lib14/project/scLongread/Fig2F.pdf", width = 8,height = 7)
+ggsave("/data/lib14/project/scLongread/Fig2G.pdf", width = 8,height = 7)
