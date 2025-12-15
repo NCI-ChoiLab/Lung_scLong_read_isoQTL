@@ -175,3 +175,4 @@ colnames(S2) <- ct
 rownames(S2) <- ct
 S2 <- S2[names(isoQTL_sig_list),names(isoQTL_sig_list)]
 pheatmap(S2, border_color = "white")
+ggsave("/data/lib14/project/scLongread/Fig4F.pdf", width = 8,height = 7)

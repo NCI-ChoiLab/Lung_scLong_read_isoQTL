@@ -113,16 +113,16 @@ saveRDS(error, file = "/data/Choi_lung/scLongreads/mashr/all.error.zscore.rds")
 ### Save output
 message("Saving merged results as an hdf5...")
 setwd("/data/Choi_lung/scLongreads/tensorqtl/isoform_level/")
-h5createFile("merge_p02.h5")
+h5createFile("merge.h5")
 ncol <- ifelse(ncol(betas) >= 10, 10, ncol(betas))
 nrow <- ifelse(nrow(betas) > 1e4, nrow(betas)/100, nrow(betas)/10)
-h5createDataset(file = "merge_p02.h5", dataset = "betas", dims = dim(betas), 
+h5createDataset(file = "merge.h5", dataset = "betas", dims = dim(betas), 
                 chunk = c(500, ncol))
-h5createDataset(file = "merge_p02.h5", dataset = "error", dims = dim(error), 
+h5createDataset(file = "merge.h5", dataset = "error", dims = dim(error), 
                 chunk = c(500, ncol))
 
-h5write(as.matrix(betas), "merge_p02.h5", "betas")
-h5write(as.matrix(error), "merge_p02.h5", "error")
-h5write(rownames(betas), "merge_p02.h5", "rownames")
-h5write(colnames(betas), "merge_p02.h5", "colnames")
+h5write(as.matrix(betas), "merge.h5", "betas")
+h5write(as.matrix(error), "merge.h5", "error")
+h5write(rownames(betas), "merge.h5", "rownames")
+h5write(colnames(betas), "merge.h5", "colnames")
 

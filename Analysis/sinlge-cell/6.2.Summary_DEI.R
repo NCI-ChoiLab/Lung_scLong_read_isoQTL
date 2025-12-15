@@ -157,7 +157,7 @@ ggplot(DEI_DEG_comp, aes(x = log2FoldChange.y, y = log2FoldChange.x)) +
   geom_abline(intercept = 0, slope = 1, color = "black")+ facet_wrap(~Celltype, ncol = 8)+
   coord_cartesian(ylim = c(0, max(DEI_DEG_comp$log2FoldChange.x))) + theme_bw() +
   theme(strip.background = element_rect(fill='transparent'),legend.position="none")
-ggsave("figures/Fig.S5a.pdf", width = 16, height = 10)
+ggsave("figures/Fig.S6a.pdf", width = 16, height = 10)
 
 
 ######################
@@ -221,7 +221,7 @@ ggplot(df_per, aes(x = Sig_times, fill = Celltype)) +
         legend.text = element_text(size=10),
         legend.position="none",
         legend.justification="right")
-ggsave("/data/lib14/project/scLongread/FigSMethodB.pdf", width = 20,height = 7)
+ggsave("/data/lib14/project/scLongread/FigS20B.pdf", width = 20,height = 7)
 table(df_per$Sig_times)
 df_per$FDR_control <- TRUE
 df_per$FDR_control[which(df_per$Sig_times < 50)] <- FALSE
@@ -273,4 +273,4 @@ rst %>%
         legend.position="none",
         legend.justification="right")+
   ggtitle("SMC")
-ggsave("/data/lib14/project/scLongread/FigSMethodC3_FP_1kperm.pdf", width = 8,height = 7)
+ggsave("/data/lib14/project/scLongread/FigS20C3_FP_1kperm.pdf", width = 8,height = 7)
