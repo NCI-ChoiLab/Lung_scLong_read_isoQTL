@@ -21,7 +21,7 @@ Differentially expression isoform (DEI) detection is described in [6.1.Isoform_s
 The raw data coule be downloaded on GEO accession number (GSE313639).
 The genotype data used for isoQTL mapping could be found on dbGap under accession: phs004420.
 In the data folder, the GTF file for post-QC isoforms identified by long-read sequencing is provided. 
-In [mass-spec](https://github.com/NCI-ChoiLab/Lung_scLong_read_isoQTL/tree/main/data/mass-spec) folder, the mass-spec summaries from 4 individuals are included.
+In [mass-spec](https://github.com/NCI-ChoiLab/Lung_scLong_read_isoQTL/tree/main/data/mass-spec) folder, the mass-spec summaries from 4 individuals are included, and the raw data can be found in MassIVE under dataset identifier MSV000100224.
 
 ---
 
