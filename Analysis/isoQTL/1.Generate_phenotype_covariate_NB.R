@@ -124,6 +124,9 @@ for(celltype in celltypes){
   
   rownames(pos) <- pos$X
   pos <- pos[TALON_afterqc_orf_secondpass$annot_transcript_id,]
+  N <- 129-length(ind_filtered)
+  idx <- order(pos$gene_id)
+  pos <- pos[idx,]
 
   non_zero_mtx <- ((count_mtx_sum[idx,]) != 0)
   dim(non_zero_mtx)
